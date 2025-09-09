@@ -1,32 +1,45 @@
-name: Build TWRP
+name: Build TWRP X657B
 
 on:
+  push:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout source
+      uses: actions/checkout@v4
 
-      - name: Setup build environment
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip curl bc build-essential
+    - name: Install deps
+      run: |
+        sudo apt update
+        sudo apt install -y git-core gnupg flex bison gperf build-essential \
+          zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 \
+          lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache \
+          libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
 
-      - name: Sync TWRP device tree
-        run: |
-          git clone https://github.com/suryonododi1/INFINIX_SMART5_twrp_x657b.git device/infinix/x657b
+    - name: Sync minimal AOSP + TWRP
+      run: |
+        git clone https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1 .repo/local_manifests
+        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+        repo sync -j$(nproc) --force-sync
 
-      - name: Build TWRP
-        run: |
-          echo "Simulasi compile TWRP disini"
-          mkdir output
-          echo "fake_twrp.img" > output/twrp-x657b.img
+    - name: Copy device tree
+      run: |
+        mkdir -p device/infinix
+        cp -r $GITHUB_WORKSPACE device/infinix/x657b
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: twrp-x657b
-          path: output/twrp-x657b.img
+    - name: Build TWRP
+      run: |
+        source build/envsetup.sh
+        lunch twrp_x657b-eng
+        mka recoveryimage -j$(nproc)
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: twrp-x657b
+        path: out/target/product/x657b/recovery.img

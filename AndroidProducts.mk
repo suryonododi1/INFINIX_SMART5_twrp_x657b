@@ -1,14 +1,7 @@
-#
-# Copyright (C) 2023 The Android Open Source Project
-# Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/omni_Infinix-X657B.mk
+    $(LOCAL_DIR)/twrp_x657b.mk
 
 COMMON_LUNCH_CHOICES := \
-    omni_Infinix-X657B-user \
-    omni_Infinix-X657B-userdebug \
-    omni_Infinix-X657B-eng
+    twrp_x657b-user \
+    twrp_x657b-userdebug \
+    twrp_x657b-eng

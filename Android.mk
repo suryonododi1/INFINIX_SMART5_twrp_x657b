@@ -1,12 +1,10 @@
-#
-# Copyright (C) 2023 The Android Open Source Project
-# Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_DEVICE),Infinix-X657B)
-include $(call all-subdir-makefiles,$(LOCAL_PATH))
+ifneq ($(filter twrp_x657b,$(TARGET_DEVICE)),)
+include $(CLEAR_VARS)
+LOCAL_MODULE := twrp_x657b
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_SRC_FILES := dummy.c
+include $(BUILD_PREBUILT)
 endif

@@ -1,0 +1,10 @@
+# Recovery fstab for Infinix Smart 5 (X657B)
+# <mount point> <fs type> <device> [flags]
+
+/system     ext4    /dev/block/by-name/system      flags=slotselect
+/vendor     ext4    /dev/block/by-name/vendor      flags=slotselect
+/data       ext4    /dev/block/by-name/userdata    flags=encryptable=footer
+/cache      ext4    /dev/block/by-name/cache
+/boot       emmc    /dev/block/by-name/boot
+/recovery   emmc    /dev/block/by-name/recovery
+/vbmeta     emmc    /dev/block/by-name/vbmeta
